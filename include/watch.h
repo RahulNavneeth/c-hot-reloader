@@ -2,6 +2,7 @@
 #define WATCH_H
 
 #include <stdlib.h>
+#include <stdint.h>
 
 typedef struct {
 	char *sym_name;
@@ -15,6 +16,6 @@ typedef struct {
 	void *handle;
 } watch;
 
-watch *init_watch (const char *libname, sym_table *sym_t, size_t sym_c);
+watch *init_watch (const char *libname, sym_table *sym_t, size_t sym_c, int32_t (*entry)(void));
 
 #endif /* WATCH_H */

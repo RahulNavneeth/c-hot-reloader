@@ -11,6 +11,6 @@ typedef struct {
 entry *init ();
 void update_description (entry *ctx, const char *description);
 void update_version (entry *ctx, int32_t version);
-int32_t entry_main (entry *ctx);
+int32_t entry_main ();
 
 #endif /* ENTRY_H */

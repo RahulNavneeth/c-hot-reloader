@@ -1,27 +1,39 @@
-CC = clang
-CFLAGS = -Wall -O3
-CFLAGS := -Iinclude
+CC      = clang
+CFLAGS  = -Wall -O3 -Iinclude
 
-BIN = bin
-SRC = $(shell find src -name "*.c")
-OBJ = $(patsubst %.c, $(BIN)/%.o, $(SRC))
+BIN     = bin
+SRC     = $(shell find src -name "*.c")
+OBJ     = $(patsubst src/%.c, $(BIN)/%.o, $(SRC))
+SRC_WO_R = $(filter-out src/main.c, $(SRC))
 
-.PHONY: all dirs clean build
+.PHONY: all clean dirs build watch run
 
-all: clean dirs build
+all: dirs build
 
 clean:
 	rm -rf $(BIN)
 
 dirs:
-	mkdir $(BIN)
+	mkdir -p $(BIN)
 
 build: $(OBJ)
 	$(CC) -o $(BIN)/main $^
 
-$(BIN)/%.o: %.c 
+$(BIN)/%.o: src/%.c
 	mkdir -p $(dir $@)
-	$(CC) -o $@ -c $< $(CFLAGS)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-run: all
+build-watch: $(SRC_WO_R)
+	$(CC) $(CFLAGS) -fPIC -shared $^ -o $(BIN)/watch.so
+
+run:
 	$(BIN)/main
+
+watch:
+	@$(MAKE) dirs
+	@$(MAKE) build
+	@$(MAKE) build-watch
+	@trap 'kill 0' SIGINT; \
+	 $(MAKE) run & \
+	 echo "$(SRC_WO_R)" | tr " " "\n" | entr $(MAKE) build-watch & \
+	 wait

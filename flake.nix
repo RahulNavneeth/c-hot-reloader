@@ -10,7 +10,7 @@
 	      		pkgs = nixpkgs.legacyPackages.${system};
 	      	in {
 	      		devShells.default = pkgs.mkShell {
-	      		 	packages = with pkgs; [ clang gnumake ];
+	      		 	packages = with pkgs; [ clang gnumake entr ];
 	      		};
 	      	}
 	    ) // {

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 entry *init () {
 	static entry *singleton;
@@ -23,7 +24,14 @@ void update_version (entry *ctx, int32_t version) {
 	ctx->version = version;
 }
 
-int32_t entry_main (entry *ctx) {
-	printf ("description: %s\nversion: %d\n", ctx->description, ctx->version);
+int32_t entry_main () {
+	entry *ctx = init(); if (ctx == NULL) return 1;
+	// int32_t i = 0;
+	// while (1) {
+	// 	if (i++ & 1) {
+			printf ("description: %s\nversion: %d\n", ctx->description, ctx->version);
+	// 		sleep (1);
+	// 	}
+	// }
 	return 0;
 }
